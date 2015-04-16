@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="GSIOC" />
+		<Option pch_mode="2" />
+		<Option compiler="armelfgcc" />
+		<Option virtualFolders="src/;" />
+		<Build>
+			<Target title="Debug">
+				<Option output="fw/Debug/fw.elf" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="5" />
+				<Option compiler="armelfgcc" />
+				<Compiler>
+					<Add directory="src/" />
+					<Add directory="src" />
+					<Add directory="src/base" />
+				</Compiler>
+				<Linker>
+					<Add library="src/usb/STM32_USB-FS-Device_Driver/libstm32usb.a" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="arm-none-eabi-objcopy -O binary fw/Debug/fw.elf fw/Debug/fw.bin" />
+					<Add after="arm-none-eabi-objdump -S fw/Debug/fw.elf  &gt; fw/Debug/fw.list" />
+				</ExtraCommands>
+			</Target>
+			<Target title="Release">
+				<Option output="fw/Release/fw.elf" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="5" />
+				<Option compiler="armelfgcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="src/" />
+					<Add directory="src" />
+					<Add directory="src/base" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-mthumb" />
+			<Add option="-mno-thumb-interwork" />
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-DSTM32F10X_HD" />
+			<Add directory="/usr/arm-none-eabi/include/STM32F10x" />
+			<Add directory="src/usb/STM32_USB-FS-Device_Driver/inc" />
+			<Add directory="src/usb" />
+			<Add directory="include" />
+		</Compiler>
+		<Linker>
+			<Add option="-Wl,--gc-sections,-Map=fw/main.map,-cref -T stm32.ld" />
+		</Linker>
+		<Unit filename="src/UsartRFID.cpp" />
+		<Unit filename="src/UsartRFID.h" />
+		<Unit filename="src/UserLogic.cpp" />
+		<Unit filename="src/UserLogic.h" />
+		<Unit filename="src/apps.cpp" />
+		<Unit filename="src/apps.h" />
+		<Unit filename="src/base/BitBanding.h" />
+		<Unit filename="src/base/ISR.cpp" />
+		<Unit filename="src/base/ISR.h" />
+		<Unit filename="src/base/clocker.cpp" />
+		<Unit filename="src/base/clocker.h" />
+		<Unit filename="src/base/gpio.h" />
+		<Unit filename="src/buzzer.cpp" />
+		<Unit filename="src/buzzer.h" />
+		<Unit filename="src/interrupts.cpp" />
+		<Unit filename="src/ir/IRLed.h" />
+		<Unit filename="src/ir/IRlogic.h" />
+		<Unit filename="src/ir/KsotarIr.h" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/microrl/config.h" />
+		<Unit filename="src/microrl/microrl.h" />
+		<Unit filename="src/timerService.cpp" />
+		<Unit filename="src/timerService.h" />
+		<Unit filename="src/usart.cpp" />
+		<Unit filename="src/usart.h" />
+		<Unit filename="src/usb/USB.cpp" />
+		<Unit filename="src/usb/USB.h" />
+		<Unit filename="src/usb/usb_conf.h" />
+		<Unit filename="src/usb/usb_desc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/usb/usb_desc.h" />
+		<Unit filename="src/usb/usb_endp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/usb/usb_init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/usb/usb_init.h" />
+		<Unit filename="src/usb/usb_istr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/usb/usb_istr.h" />
+		<Unit filename="src/usb/usb_prop.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/usb/usb_prop.h" />
+		<Unit filename="src/usb/usb_pwr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/usb/usb_pwr.h" />
+		<Unit filename="stm32.ld" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger>
+				<search_path add="/usr/arm-none-eabi/include/STM32F10x" />
+				<search_path add="/usr/arm-none-eabi/include/CMSIS" />
+				<search_path add="/usr/arm-none-eabi/include" />
+				<remote_debugging>
+					<options conn_type="0" serial_baud="115200" ip_address="127.0.0.1" ip_port="3333" additional_cmds="monitor halt&#x0A;monitor poll" skip_ld_path="1" extended_remote="1" />
+				</remote_debugging>
+			</debugger>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
