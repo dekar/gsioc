@@ -11,6 +11,7 @@ namespace USB
     void pool();
     extern bool(* incommingFunc)(const uint8_t * const data, uint8_t size);
     bool isPCConnected();
+
 };
 
 #endif // USB_H

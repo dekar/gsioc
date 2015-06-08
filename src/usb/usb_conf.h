@@ -30,11 +30,11 @@
 /* buffer table base address */
 /* buffer table base address */
 #define BTABLE_SIZE   0x40
-#define ENDP0_RX_SIZE 0x40
-#define ENDP0_TX_SIZE 0x40
-#define ENDP1_TX_SIZE 0x40
-#define ENDP2_RX_SIZE 0x40
-#define ENDP3_TX_SIZE 0x40
+#define ENDP0_RX_SIZE 0x20
+#define ENDP0_TX_SIZE 0x20
+#define ENDP1_TX_SIZE 0x20
+#define ENDP2_TX_SIZE 0x40
+#define ENDP3_RX_SIZE 0x40
 #define ENDP4_RX_SIZE 0x40
 
 
@@ -49,9 +49,9 @@
 /* EP1  */
 /* tx buffer base address */
 #define ENDP1_TXADDR        ENDP0_TXADDR + ENDP0_TX_SIZE
-#define ENDP2_RXADDR        ENDP1_TXADDR + ENDP1_TX_SIZE
-#define ENDP3_TXADDR        ENDP2_RXADDR + ENDP2_RX_SIZE
-#define ENDP4_RXADDR        ENDP3_TXADDR + ENDP3_TX_SIZE
+#define ENDP2_TXADDR        ENDP1_TXADDR + ENDP1_TX_SIZE
+#define ENDP3_RXADDR        ENDP2_TXADDR + ENDP2_TX_SIZE
+#define ENDP4_RXADDR        ENDP3_RXADDR + ENDP3_RX_SIZE
 #if (ENDP4_RXADDR + ENDP4_RX_SIZE) > 512
     #error USBERROR_BUFEROVEROLAD
 #endif
@@ -78,7 +78,7 @@
 /* CTR service routines */
 /* associated to defined endpoints */
 //#define  EP1_IN_Callback   NOP_Process
-#define  EP2_IN_Callback   NOP_Process
+//#define  EP2_IN_Callback   NOP_Process
 #define  EP3_IN_Callback   NOP_Process
 #define  EP4_IN_Callback   NOP_Process
 #define  EP5_IN_Callback   NOP_Process
@@ -86,29 +86,29 @@
 #define  EP7_IN_Callback   NOP_Process
 
 #define  EP1_OUT_Callback   NOP_Process
-//#define  EP2_OUT_Callback   NOP_Process
-#define  EP3_OUT_Callback   NOP_Process
+#define  EP2_OUT_Callback   NOP_Process
+//#define  EP3_OUT_Callback   NOP_Process
 #define  EP4_OUT_Callback   NOP_Process
 #define  EP5_OUT_Callback   NOP_Process
 #define  EP6_OUT_Callback   NOP_Process
 #define  EP7_OUT_Callback   NOP_Process
 
-#define EP_CONFIG_TX ENDP1
-#define EP_CONFIG_TX_ADDR ENDP1_TXADDR
+#define EP_USART_TX ENDP1
+#define EP_USART_TX_ADDR ENDP1_TXADDR
 //#define EP_CONFIG_TX_Callback EP1_IN_Callback
 
 //#
-#define EP_CONFIG_RX ENDP2
-#define EP_CONFIG_RX_ADDR ENDP2_RXADDR
+#define EP_CONFIG_TX ENDP2
+#define EP_CONFIG_TX_ADDR ENDP2_TXADDR
 //#define EP_CONFIG_RX_Callback EP2_OUT_Callback
 
-#define EP_SEND_TX ENDP3
-#define EP_SEND_TX_ADDR ENDP3_TXADDR
-#define EP_SEND_TX_Callback EP3_IN_Callback
+#define EP_USART_RX ENDP3
+#define EP_USART_RX_ADDR ENDP3_RXADDR
+//#define EP_USART_RX_Callback EP3_IN_Callback
 
-#define EP_SEND_RX ENDP4
-#define EP_SEND_RX_ADDR ENDP4_RXADDR
-#define EP_SEND_RX_Callback EP4_OUT_Callback
+//#define EP_SEND_RX ENDP4
+//#define EP_SEND_RX_ADDR ENDP4_RXADDR
+//#define EP_SEND_RX_Callback EP4_OUT_Callback
 
 
 #endif /* __USB_CONF_H */

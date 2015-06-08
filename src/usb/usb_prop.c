@@ -25,7 +25,14 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-//u8 Request = 0;
+u8 Request = 0;
+LINE_CODING linecoding =
+  {
+    115200, /* baud rate*/
+    0x00,   /* stop bits-1*/
+    0x00,   /* parity - none*/
+    0x08    /* no. of bits 8*/
+  };
 
 
 /* -------------------------------------------------------------------------- */
@@ -153,30 +160,30 @@ void Virtual_Com_Port_Reset(void)
   SetEPRxValid(ENDP0);
 
   // Initialize Endpoint 1 IN INTR TX
-  SetEPType(ENDP1, EP_INTERRUPT);
+  SetEPType(ENDP1, EP_BULK);
   SetEPTxAddr(ENDP1, ENDP1_TXADDR);
   SetEPTxStatus(ENDP1, EP_TX_NAK);
   SetEPRxStatus(ENDP1, EP_RX_DIS);
 
-  // Initialize Endpoint 2 OUT INTR RX
+  // Initialize Endpoint 2 IN BLUK TX
   SetEPType(ENDP2, EP_INTERRUPT);
-  SetEPRxAddr(ENDP2, ENDP2_RXADDR);
-  SetEPRxCount(ENDP2, ENDP2_RX_SIZE);
-  SetEPRxStatus(ENDP2, EP_RX_VALID);
-  SetEPTxStatus(ENDP2, EP_TX_DIS);
+  SetEPTxAddr(ENDP2, ENDP2_TXADDR);
+  SetEPTxStatus(ENDP2, EP_TX_NAK);
+  SetEPRxStatus(ENDP2, EP_RX_DIS);
 
-  // Initialize Endpoint 3 IN BLUK TX
+  // Initialize Endpoint 3 OUT BLUK RX
   SetEPType(ENDP3, EP_BULK);
-  SetEPTxAddr(ENDP3, ENDP3_TXADDR);
-  SetEPRxStatus(ENDP3, EP_RX_DIS);
-  SetEPTxStatus(ENDP3, EP_TX_NAK);
+  SetEPRxAddr(ENDP3, ENDP3_RXADDR);
+  SetEPRxCount(ENDP4, ENDP3_RX_SIZE);
+  SetEPRxStatus(ENDP3, EP_RX_VALID);
+  SetEPTxStatus(ENDP3, EP_TX_DIS);
 
   // Initialize Endpoint 4 OUT BLUK RX
-  SetEPType(ENDP4, EP_BULK);
+  /*SetEPType(ENDP4, EP_BULK);
   SetEPRxAddr(ENDP4, ENDP4_RXADDR);
   SetEPRxCount(ENDP4, ENDP4_RX_SIZE);
   SetEPRxStatus(ENDP4, EP_RX_VALID);
-  SetEPTxStatus(ENDP4, EP_TX_DIS);
+  SetEPTxStatus(ENDP4, EP_TX_DIS);*/
 
   /* Set this device to response on default address */
   SetDeviceAddress(0);
@@ -223,6 +230,12 @@ void Virtual_Com_Port_SetDeviceAddress (void)
 *******************************************************************************/
 void Virtual_Com_Port_Status_In(void)
 {
+  if (Request == SET_LINE_CODING)
+  {
+    //USART_Config();// bitrate / 16
+    Bitrate_Callback(linecoding.bitrate);
+    Request = 0;
+  }
 }
 
 /*******************************************************************************
@@ -252,16 +265,16 @@ RESULT Virtual_Com_Port_Data_Setup(u8 RequestNo)
   {
     if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
     {
-      //CopyRoutine = Virtual_Com_Port_GetLineCoding;
+      CopyRoutine = Virtual_Com_Port_GetLineCoding;
     }
   }
   else if (RequestNo == SET_LINE_CODING)
   {
     if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
     {
-      //CopyRoutine = Virtual_Com_Port_SetLineCoding;
+      CopyRoutine = Virtual_Com_Port_SetLineCoding;
     }
-    //Request = SET_LINE_CODING;
+    Request = SET_LINE_CODING;
   }
 
   if (CopyRoutine == NULL)
@@ -390,6 +403,41 @@ RESULT Virtual_Com_Port_Get_Interface_Setting(u8 Interface, u8 AlternateSetting)
     return USB_UNSUPPORT;
   }
   return USB_SUCCESS;
+}
+
+
+/*******************************************************************************
+* Function Name  : Virtual_Com_Port_GetLineCoding.
+* Description    : send the linecoding structure to the PC host.
+* Input          : Length.
+* Output         : None.
+* Return         : Inecoding structure base address.
+*******************************************************************************/
+u8 *Virtual_Com_Port_GetLineCoding(u16 Length)
+{
+  if (Length == 0)
+  {
+    pInformation->Ctrl_Info.Usb_wLength = sizeof(linecoding);
+    return NULL;
+  }
+  return(u8 *)&linecoding;
+}
+
+/*******************************************************************************
+* Function Name  : Virtual_Com_Port_SetLineCoding.
+* Description    : Set the linecoding structure fields.
+* Input          : Length.
+* Output         : None.
+* Return         : Linecoding structure base address.
+*******************************************************************************/
+u8 *Virtual_Com_Port_SetLineCoding(u16 Length)
+{
+  if (Length == 0)
+  {
+    pInformation->Ctrl_Info.Usb_wLength = sizeof(linecoding);
+    return NULL;
+  }
+  return(u8 *)&linecoding;
 }
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/

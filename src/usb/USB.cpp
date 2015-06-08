@@ -52,9 +52,8 @@ void USB::init()
   NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn,1);
   USB::cableConnect(false);
 
-  //GPIOA->BSRR = GPIO_BSRR_BS8;
-  //GPIOC->BSRR = GPIO_BSRR_BS11;
-  IOSetup<IOA,8,IO_outPP2MHz>();
+  GPIOB->BSRR = GPIO_BSRR_BS14;
+  IOSetup<IOB,14,IO_outPP2MHz>();
 
     writeLock = false;
 
@@ -69,12 +68,12 @@ void USB::cableConnect(bool enable)
 
   if (enable)
   {
-      GPIOA->BSRR = GPIO_BSRR_BR8;
+      GPIOB->BSRR = GPIO_BSRR_BR14;
 
   }
   else
   {
-      GPIOA->BSRR = GPIO_BSRR_BS8;
+      GPIOB->BSRR = GPIO_BSRR_BS14;
   }
 
 }
@@ -92,25 +91,14 @@ Main USB loop
 void USB::pool()
 {
     //if()
-    if(__usb_recieveSize)
-    {
-        if(USB::incommingFunc == 0)
-        {
-            __usb_recieveSize = 0;
-            return;
-        }
-        if(USB::incommingFunc(__usb_recieveBuf,__usb_recieveSize))
-            __usb_recieveSize = 0;
-            return;
-    }
+
 }
 void USB::sendRawData(const uint8_t* data, uint16_t size)
 {
-    /*while(writeLock);
-    writeLock = true;*/
-    UserToPMABufferCopy(const_cast<uint8_t*>(data),EP_CONFIG_TX_ADDR,size);
-    _SetEPTxCount(EP_CONFIG_TX, size);
-    _SetEPTxValid(EP_CONFIG_TX);
+
+    UserToPMABufferCopy(const_cast<uint8_t*>(data),EP_USART_TX_ADDR,size);
+    _SetEPTxCount(EP_USART_TX, size);
+    _SetEPTxValid(EP_USART_TX);
 }
 
 /**
@@ -118,28 +106,37 @@ C callbacks for USB stack
 */
 
 extern "C"{
-void EP2_OUT_Callback()
+void EP2_IN_Callback()
 {
-    if(GetEPRxCount(EP_CONFIG_RX) == 64)
-    {
-        SetEPRxValid(EP_CONFIG_RX);
-        return;
-    }
 
-    if(__usb_recieveSize)
-    {
-        _SetEPRxStatus(EP_CONFIG_RX,EP_RX_NAK);
-        return;
-    }
-    __usb_recieveSize = GetEPRxCount(EP_CONFIG_RX);
-    // Резервирую место для пакета
-    PMAToUserBufferCopy(__usb_recieveBuf, EP_CONFIG_RX_ADDR, __usb_recieveSize);
-    SetEPRxValid(EP_CONFIG_RX);
 }
 void EP1_IN_Callback()
 {
-// send OK
-    //writeLock = false;
+
+}
+void EP3_OUT_Callback()
+{
+    // Резервирую место для пакета
+    PMAToUserBufferCopy(__usb_recieveBuf, EP_USART_RX_ADDR, 1);
+
+    uint8_t usart = __usb_recieveBuf[0];
+    USART1->DR = usart;
+    SetEPRxValid(EP_USART_RX);
+
+}
+
+void Bitrate_Callback(uint32_t bitrate)
+{
+
+    USART1->BRR = 72000000UL / bitrate;
+    // Set clock to 16 x bitrate
+    TIM1->PSC = ((36000000UL/16) / bitrate ) -1;
+/*
+    example:
+    set 9600 bps:
+    freq = 153600
+*/
+
 
 }
 

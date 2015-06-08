@@ -30,7 +30,7 @@
 
 
 #define DEVICE_SIZ_DEVICE_DESC        18
-#define DEVICE_SIZ_CONFIG_DESC        55 +4+5+5+5//-9-14//67
+#define DEVICE_SIZ_CONFIG_DESC        9 + 9 + 5 + 5 + 4 + 5 + 7 + 9 + 7 + 7
 #define DEVICE_SIZ_STRING_LANGID      4
 #define DEVICE_SIZ_STRING_VENDOR      14
 #define DEVICE_SIZ_STRING_PRODUCT     24

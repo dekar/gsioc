@@ -77,6 +77,8 @@ void EP5_OUT_Callback(void);
 void EP6_OUT_Callback(void);
 void EP7_OUT_Callback(void);
 
+void Bitrate_Callback(uint32_t bitrate);
+
 #endif /*__USB_ISTR_H*/
 
 /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/
