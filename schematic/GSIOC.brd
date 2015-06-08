@@ -123,6 +123,8 @@
 <wire x1="0" y1="30.15" x2="0" y2="0.15" width="0" layer="20"/>
 <wire x1="0" y1="0.15" x2="60" y2="0.15" width="0" layer="20"/>
 <text x="46.31569375" y="44.783840625" size="1.016" layer="28" rot="MR270">12MHz</text>
+<text x="13.95" y="1.05" size="1.778" layer="1" font="vector" ratio="21">V0.5</text>
+<text x="14.1" y="3.3" size="1.27" layer="1" font="vector" ratio="21">GSIOC</text>
 </plain>
 <libraries>
 <library name="stm32">
