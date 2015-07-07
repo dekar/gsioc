@@ -22,8 +22,8 @@ void start()
     IOSetup<IOC,13,IO_outPP50MHz>();
     IOSetup<IOC,14,IO_outPP50MHz>();
     IOSetup<IOC,15,IO_outPP50MHz>();
-    GPIOC->BSRR = GPIO_Pin_14 ;
-    GPIOC->BSRR = GPIO_Pin_13  | GPIO_Pin_15;
+    GPIOC->BRR = GPIO_Pin_13 ;
+    GPIOC->BSRR = GPIO_Pin_14  | GPIO_Pin_15;
 
 
 

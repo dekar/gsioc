@@ -120,7 +120,7 @@ void EP3_OUT_Callback()
     PMAToUserBufferCopy(__usb_recieveBuf, EP_USART_RX_ADDR, 1);
 
     uint8_t usart = __usb_recieveBuf[0];
-    USART1->DR = usart;
+    USART3->DR = usart;
     SetEPRxValid(EP_USART_RX);
 
 }
@@ -128,7 +128,7 @@ void EP3_OUT_Callback()
 void Bitrate_Callback(uint32_t bitrate)
 {
 
-    USART1->BRR = 72000000UL / bitrate;
+    USART3->BRR = 18000000UL / bitrate;
     // Set clock to 16 x bitrate
     TIM1->PSC = ((36000000UL/16) / bitrate ) -1;
 /*
