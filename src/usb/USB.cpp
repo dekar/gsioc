@@ -14,6 +14,51 @@ extern vu32 bDeviceState;
 }
 
 
+struct tBufer
+{
+    uint8_t data[256];
+    volatile uint8_t sendPtr;
+    volatile uint8_t dataPtr;
+    volatile  bool busy;
+}bufer;
+inline void buferReset()
+{
+    bufer.dataPtr = 0;
+    bufer.sendPtr = 0;
+    bufer.busy = false;
+}
+inline void sendRawData(const uint8_t* data, uint16_t size)
+{
+    UserToPMABufferCopy(const_cast<uint8_t*>(data),EP_USART_TX_ADDR,size);
+    _SetEPTxCount(EP_USART_TX, size);
+    _SetEPTxValid(EP_USART_TX);
+
+}
+
+inline void sendNextByte()
+{
+    if(bufer.busy)
+        return;
+    __disable_irq()   ;
+    if(bufer.dataPtr != bufer.sendPtr)
+    {
+        bufer.busy = true;
+        sendRawData(bufer.data + bufer.sendPtr,1);
+    }
+    __enable_irq();
+}
+inline void finishSend()
+{
+    __disable_irq()   ;
+    if(bufer.busy)
+    {
+        bufer.sendPtr ++;
+        bufer.busy = false;
+    }
+    __enable_irq();
+    sendNextByte();
+}
+
 
 volatile bool writeLock;
 //#define NJTAG
@@ -48,6 +93,7 @@ void USB::init()
 
   /* Configure USB pull-up pin */
   USB_Init();
+  buferReset();
   NVIC_EnableIRQ(USB_LP_CAN1_RX0_IRQn);
   NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn,1);
   USB::cableConnect(false);
@@ -93,12 +139,17 @@ void USB::pool()
     //if()
 
 }
-void USB::sendRawData(const uint8_t* data, uint16_t size)
-{
 
-    UserToPMABufferCopy(const_cast<uint8_t*>(data),EP_USART_TX_ADDR,size);
-    _SetEPTxCount(EP_USART_TX, size);
-    _SetEPTxValid(EP_USART_TX);
+
+
+
+void USB::addByte(uint8_t byte)
+{
+    __disable_irq()   ;
+    bufer.data[bufer.dataPtr] = byte;
+    bufer.dataPtr++;
+    __enable_irq();
+    sendNextByte();
 }
 
 /**
@@ -112,7 +163,7 @@ void EP2_IN_Callback()
 }
 void EP1_IN_Callback()
 {
-
+    finishSend();
 }
 void EP3_OUT_Callback()
 {

@@ -45,6 +45,6 @@ void ISR::USART3_IRQ()
     if(USART3->SR & USART_SR_RXNE)
     {
         uint8_t r = USART3->DR;
-        USB::sendRawData(&r,1);
+        USB::addByte(r);
     }
 }

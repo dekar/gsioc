@@ -58,9 +58,6 @@
 		</Linker>
 		<Unit filename="src/Coils.cpp" />
 		<Unit filename="src/Coils.h" />
-		<Unit filename="src/UsartRFID.h" />
-		<Unit filename="src/UserLogic.h" />
-		<Unit filename="src/apps.h" />
 		<Unit filename="src/base/BitBanding.h" />
 		<Unit filename="src/base/ISR.cpp" />
 		<Unit filename="src/base/ISR.h" />
@@ -76,7 +73,6 @@
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/microrl/config.h" />
 		<Unit filename="src/microrl/microrl.h" />
-		<Unit filename="src/timerService.h" />
 		<Unit filename="src/usart.cpp" />
 		<Unit filename="src/usart.h" />
 		<Unit filename="src/usb/USB.cpp" />

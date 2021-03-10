@@ -32,16 +32,6 @@ void start()
 
 
 
-  // MCO enable
-//    IOSetup<IOA,8,IO_outAFPP50MHz>();
-//    RCC->CFGR |= RCC_CFGR_MCO_2;
-    //GPIOA->BSRR = GPIO_BSRR_BS8;
-
-    //IOSetup<IOB,9,IO_outPP2MHz>();
-    //IOSetup<IOA,10,IO_outPP50MHz>();
-
-    //Coils::init();
-
 
 
     USART::init();
@@ -49,7 +39,6 @@ void start()
     __enable_irq ();
 
     USB::init();
-    //USB::incommingFunc = APPS::pushPkg;
 
     USB::cableConnect(true);
 
@@ -57,8 +46,6 @@ void start()
 
     while(1)
     {
-        //USB::pool();
-        //USART::pool();
     }
 }
 
